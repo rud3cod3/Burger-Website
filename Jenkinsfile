@@ -8,14 +8,14 @@ pipeline {
     stages {
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t $DOCKERHUB_USER/$IMAGE_NAME:1.3.0 ."
+                sh "docker build -t $DOCKERHUB_USER/$IMAGE_NAME:latest ."
             }
         }
         stage('Push to DockerHub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                    sh "docker push $DOCKER_USER/$IMAGE_NAME:1.3.0"
+                    sh "docker push $DOCKER_USER/$IMAGE_NAME:latest"
                 }
             }
         }
@@ -26,7 +26,7 @@ pipeline {
                     ssh -o StrictHostKeyChecking=no ubuntu@$DEPLOY_SERVER '
                         docker pull $DOCKERHUB_USER/$IMAGE_NAME:latest &&
                         docker rm -f burger-web || true &&
-                        docker run -d --name burger-web -p 80:80 $DOCKERHUB_USER/$IMAGE_NAME:1.3.0
+                        docker run -d --name burger-web -p 80:80 $DOCKERHUB_USER/$IMAGE_NAME:latest
                     '
                     """
                 }
