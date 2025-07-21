@@ -8,14 +8,14 @@ pipeline {
     stages {
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t $DOCKERHUB_USER/$IMAGE_NAME:1.1.0 ."
+                sh "docker build -t $DOCKERHUB_USER/$IMAGE_NAME:1.2.0 ."
             }
         }
         stage('Push to DockerHub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                    sh "docker push $DOCKER_USER/$IMAGE_NAME:1.1.0"
+                    sh "docker push $DOCKER_USER/$IMAGE_NAME:1.2.0"
                 }
             }
         }
