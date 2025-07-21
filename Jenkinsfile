@@ -26,7 +26,7 @@ pipeline {
                     ssh -o StrictHostKeyChecking=no ubuntu@$DEPLOY_SERVER '
                         docker pull $DOCKERHUB_USER/$IMAGE_NAME:latest &&
                         docker rm -f burger-web || true &&
-                        docker run -d --name burger-web -p 80:80 $DOCKERHUB_USER/$IMAGE_NAME:latest
+                        docker run -d --name burger-web -p 80:80 $DOCKERHUB_USER/$IMAGE_NAME:1.3.0
                     '
                     """
                 }
